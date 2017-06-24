@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "latest", "react"
+  ],
+  "plugins": [
+    "transform-react-jsx",
+    "transform-es2015-template-literals",
+    [
+      "transform-imports", {
+	"react-bootstrap": {
+	  "transform": "react-bootstrap/lib/${member}",
+	  "preventFullImport": true
+	}
+      }
+    ]
+  ]
+}
