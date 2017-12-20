@@ -1,13 +1,13 @@
 "use strict";
 
-import React from 'react';
-import ReactDom from 'react-dom';
+import React from "react";
+import ReactDom from "react-dom";
 
 import {
     Panel, Badge,
     Button, ButtonToolbar,
     Form, FormGroup, FormControl, ControlLabel
-} from 'react-bootstrap';
+} from "react-bootstrap";
 
 class Palindrome extends React.Component {
 
@@ -21,11 +21,66 @@ class Palindrome extends React.Component {
             processed : false
         };
 
-        this.input.bind(this);
-        this.clear.bind(this);
-        this.find.bind(this);
-        this.palindrome.bind(this);
-        this.multiple_line_split.bind(this);
+        this.input = this.input.bind(this);
+        this.clear = this.clear.bind(this);
+        this.find = this.find.bind(this);
+        this.palindrome = this.palindrome.bind(this);
+        this.multiple_line_split = this.multiple_line_split.bind(this);
+    }
+
+    render() {
+        const header = (
+            <h3>Palindrome</h3>
+        );
+
+        const footer = (
+            <ButtonToolbar>
+              <Button bsStyle="primary"
+                      onClick={this.find}
+                      disabled={this.state.disabled}>find</Button>
+              <div style={{ width: "auto"}}/>
+              <Button bsStyle="danger" onClick={this.clear}>clear</Button>
+            </ButtonToolbar>
+        );
+
+        const input = (
+            <Form>
+              <FormGroup controlId="inputTextarea">
+                <ControlLabel>Input Text</ControlLabel>
+                <FormControl componentClass="textarea"
+                             rows={this.state.rows} style={{resize: "vertical"}}
+                             placeholder="enter text here..."
+                             value={this.state.input}
+                             onChange={this.input}/>
+              </FormGroup>
+            </Form>
+        );
+
+        const output = (
+            <Form>
+              <FormGroup controlId="outputParagraph" style={this.styles.output}>
+                <ControlLabel>Palindrome Text</ControlLabel>
+                <p style={this.styles.content}>
+                  {this.state.output}
+                </p>
+              </FormGroup>
+            </Form>
+        );
+
+        const container = (
+            <div className="container" style={this.styles.container}>
+              <div className="row">
+                <div className="col-sm-12">
+                  <Panel header={header}
+                         footer={footer}>
+                    {input}
+                    {output}
+                  </Panel>
+                </div>
+              </div>
+            </div>
+        );
+        return container;
     }
 
     clear() {
@@ -38,29 +93,19 @@ class Palindrome extends React.Component {
         const value = e.target.value;
         this.setState((prevState, props) => ({
             input: value,
-            rows : Math.max(3, value.split('').filter(i => (i === '\n')).length + 1),
+            rows : Math.max(3, value.split("").filter(i => (i === "\n")).length + 1),
             disabled : value.length === 0 ? true : false
         }));
     }
 
     find() { // find palindrome
-        const self = this;
-        const styles = {
-            badge : {
-                backgroundColor : "#17d1d5", color: "lightcyan"
-            },
-            space : {
-                padding: "0 0.25em"
-            }
-        };
-
-        self.setState((prevState, props) => {
-            const words = self.multiple_line_split(prevState.input);
+        this.setState((prevState, props) => {
+            const words = this.multiple_line_split(prevState.input);
             const texts = words.map((w, i) => {
-                if (self.palindrome(w)) {
+                if (this.palindrome(w)) {
                     const p = (
-                        <span key={i} style={styles.space}>
-                          <Badge style={styles.badge}>
+                        <span key={i} style={this.styles.space}>
+                          <Badge style={this.styles.badge}>
                             {w}
                           </Badge>
                         </span>
@@ -72,7 +117,7 @@ class Palindrome extends React.Component {
                     );
                 } else {
                     return (
-                        <span key={i} style={styles.space}>
+                        <span key={i} style={this.styles.space}>
                           {w}
                         </span>
                     );
@@ -88,10 +133,10 @@ class Palindrome extends React.Component {
         // const words = prevState.input.slice().match(/↵|[^ ↵]+/g);
         strings = JSON.stringify(strings).slice(1, -1);
         const words = strings.split(" ").reduce((result, word) => {
-            const spaced_word = word.replace("\\n", ' <br/> ').split(' ');
+            const spaced_word = word.replace("\\n", " <br/> ").split(" ");
             result.push(...spaced_word);
             return result;
-        }, [])
+        }, []);
         return words;
     }
 
@@ -108,10 +153,8 @@ class Palindrome extends React.Component {
         return true;
     }
 
-    render() {
-        const self = this;
-
-        const styles = {
+    get styles() {
+        return {
             container: {
                 padding: "2em"
             },
@@ -122,65 +165,16 @@ class Palindrome extends React.Component {
                 borderRadius: "4px"
             },
             output : {
-                display : self.state.processed ? "block" : "none"
+                display : this.state.processed ? "block" : "none"
+            },
+            badge : {
+                backgroundColor : "#17d1d5", color: "lightcyan"
+            },
+            space : {
+                padding: "0 0.25em"
             }
         };
-
-
-        const header = (
-            <h3>Palindrome</h3>
-        );
-
-        const footer = (
-            <ButtonToolbar>
-              <Button bsStyle="primary"
-                      onClick={() => self.find()}
-                      disabled={self.state.disabled}>find</Button>
-              <div style={{ width: "auto"}}/>
-              <Button bsStyle="danger" onClick={() => self.clear()}>clear</Button>
-            </ButtonToolbar>
-        );
-
-        const input = (
-            <Form>
-              <FormGroup controlId="inputTextarea">
-                <ControlLabel>Input Text</ControlLabel>
-                <FormControl componentClass="textarea"
-                             rows={self.state.rows} style={{resize: "vertical"}}
-                             placeholder="enter text here..."
-                             value={self.state.input}
-                             onChange={(e) => self.input(e)}/>
-              </FormGroup>
-            </Form>
-        );
-
-        const output = (
-            <Form>
-              <FormGroup controlId="outputParagraph" style={styles.output}>
-                <ControlLabel>Palindrome Text</ControlLabel>
-                <p style={styles.content}>
-                  {self.state.output}
-                </p>
-              </FormGroup>
-            </Form>
-        );
-
-        const container = (
-            <div className="container" style={styles.container}>
-              <div className="row">
-                <div className="col-sm-12">
-                  <Panel header={header}
-                         footer={footer}>
-                    {input}
-                    {output}
-                  </Panel>
-                </div>
-              </div>
-            </div>
-        );
-
-        return container;
-    };
+    }
 }
 
 ReactDom.render(<Palindrome/>, document.getElementById("app"));

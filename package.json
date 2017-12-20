@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "python -m SimpleHTTPServer",
-    "webpack": "webpack --watch --config palindrome.webpack.config.js "
+    "webpack": "webpack --watch --config webpack.config.js "
   },
   "keywords": [],
   "author": "Timothy Shiu <timoweave@gmail.com>",
@@ -18,8 +18,10 @@
     "axios": "^0.16.2",
     "babel-cli": "^6.24.1",
     "babel-loader": "^7.1.0",
+    "babel-plugin-react-html-attrs": "^2.0.0",
     "babel-plugin-transform-imports": "^1.4.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.5.2",
     "babel-preset-latest": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "bootstrap": "^3.3.7",
